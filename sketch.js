@@ -1,4 +1,4 @@
-//11
+//12
 function setup(){
   icursor = new MobileFriendlyCursor({
     threeFingerConsole: true,
@@ -237,7 +237,6 @@ function onLoadComplete(){
     }
   }
   
-  soundMusic.setVolume(0.4)
   soundSpeech.setVolume(1.5);
 }
 
@@ -495,8 +494,13 @@ function cursorPressStart(){
     dontRepeatArrowMessage = true;
   }
   if(myLoader.complete && !soundMusic.isPlaying()){
+    
+    if(getAudioContext().state == "suspended")
+    getAudioContext().resume()
+    
     soundMusic.loop();
     soundMusic.jump( timeOfSoundMusic )
+    soundMusic.setVolume(0.4);
   }
 }
 
