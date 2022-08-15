@@ -1,4 +1,4 @@
-//10
+//11
 function setup(){
   icursor = new MobileFriendlyCursor({
     threeFingerConsole: true,
@@ -60,6 +60,8 @@ function setup(){
   key1collected = false
   key2collected = false
   displayArrowMessage = false;
+  
+  timeOfSoundMusic = 0;
   
   hoveringTalkButton = () => { 
     return (
@@ -141,8 +143,10 @@ function setup(){
 }
 
 muteInterval = setInterval( ()=> {
-  if(myLoader.complete && soundMusic.isPlaying() && document.hidden )
-  soundMusic.pause();
+  if(myLoader.complete && soundMusic.isPlaying() && document.hidden ){
+    soundMusic.stop();
+    timeOfSoundMusic = soundMusic.currentTime();
+  }
 }, 200)
 
 function onLoadComplete(){
@@ -457,7 +461,8 @@ function cursorClick(){
       if (guess !== null && guess.includes("1886")){
         myDialogue.setActiveNode("Safe Open")
         soundVictory.play();
-        soundMusic.pause();
+        timeOfSoundMusic = soundMusic.currentTime();
+        soundMusic.stop();
         player.hasPassword = true;
         delete collisionRects["t.safe"]
       } else {
@@ -489,7 +494,10 @@ function cursorPressStart(){
     displayArrowMessage = true;
     dontRepeatArrowMessage = true;
   }
-  if(myLoader.complete && !soundMusic.isPlaying())soundMusic.loop();
+  if(myLoader.complete && !soundMusic.isPlaying()){
+    soundMusic.loop();
+    soundMusic.jump( timeOfSoundMusic )
+  }
 }
 
 function updatePlayer(){
